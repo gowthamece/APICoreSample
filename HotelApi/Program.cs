@@ -11,10 +11,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<HotelDbContext>(options =>
-            options.UseSqlServer("HotelConnectionString"));
-var app = builder.Build();
 
+var app = builder.Build();
+var config = app.Configuration;
+builder.Services.AddDbContext<HotelDbContext>(options =>
+            options.UseSqlServer(config.GetConnectionString("HotelConnectionString"),
+             b => b.MigrationsAssembly(typeof(HotelDbContext).Assembly.FullName)));
+          
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
